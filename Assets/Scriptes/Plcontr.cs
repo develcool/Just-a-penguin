@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.Advertisements;
 public class Plcontr : MonoBehaviour
 {
+    public GameObject jump_btn;
     public AudioSource jumpSound;
     public AudioSource DieOne;
     public AudioSource DieTwo;
@@ -28,6 +29,7 @@ public class Plcontr : MonoBehaviour
     public bool startEd = false;
     void Start()
     {   
+        jump_btn.SetActive(false);
            if(Advertisement.isSupported){
                 Advertisement.Initialize("3588489",false);
         }
@@ -49,7 +51,7 @@ public class Plcontr : MonoBehaviour
          InvokeRepeating ("SpawnVertical" , 2f ,2f);
     }
     void FixedUpdate(){
-       
+       /*
          if (Input.touchCount > 0 && Global_settings.state == true && panel.activeSelf == false) {
              Touch touch = Input.GetTouch(0);
         if(touch.phase == TouchPhase.Began){
@@ -58,24 +60,30 @@ public class Plcontr : MonoBehaviour
          Fire.SetActive(true);
          StartCoroutine(fireOFF(0.5f));
         }
+        
 	}
+    */
     }
     void Update(){
             startTime -= Time.deltaTime;
             timer.text = Mathf.Round(startTime).ToString();
             if (startTime < 0 && Global_settings.state == false){
+                         jump_btn.SetActive(true);
                          rigidbody.gravityScale=3f;
                          timer.gameObject.SetActive(false);
                          if(startEd == false){
                          startEd = true;
                          Global_settings.state = true;
+                         jump_btn.SetActive(true);
                          }else {
                              Global_settings.state = false;
+                             jump_btn.SetActive(false);
                          }
             }
         }
     void OnCollisionEnter2D(Collision2D col){
        if(col.gameObject.layer == LayerMask.NameToLayer("killer")){
+        jump_btn.SetActive(false);
         if(Score.score > PlayerPrefs.GetInt("HightScore")){
         PlayerPrefs.SetInt("HightScore", Score.score);
         hightscore_tx.text = hightscore.ToString();
@@ -101,6 +109,12 @@ public class Plcontr : MonoBehaviour
        }
        Debug.Log(Global_settings.countOfStart.ToString());
        }
+    }
+    public void JumpRB(){
+        jumpSound.Play();
+         rigidbody.AddForce(Vector2.up * (force - rigidbody.velocity.y), ForceMode2D.Impulse);
+         Fire.SetActive(true);
+         StartCoroutine(fireOFF(0.5f));
     }
     void SpawnVertical (){
         if(Global_settings.state == true){
@@ -170,4 +184,5 @@ public class Plcontr : MonoBehaviour
     }
     }
 }
+
 

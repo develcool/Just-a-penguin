@@ -14,6 +14,7 @@ public class Upper : MonoBehaviour
     public GameObject panel;
     public Text score; 
     public Text hightscore_tx;
+    public GameObject jump_btn;
     // Start is called before the first frame update
     void Start(){
         if(Advertisement.isSupported){
@@ -23,6 +24,7 @@ public class Upper : MonoBehaviour
    private void OnTriggerEnter2D(Collider2D col){
         if (col.CompareTag("Player"))
         {
+          jump_btn.SetActive(false);
           // SceneManager.LoadScene(0);
            panel.SetActive(true);
              if(Score.score > PlayerPrefs.GetInt("HightScore")){
